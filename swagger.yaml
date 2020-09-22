@@ -1,0 +1,35 @@
+definitions:
+  Employee:
+    properties:
+      id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      name:
+        type: string
+        x-go-name: Name
+      unit:
+        type: string
+        x-go-name: Unit
+    title: Employee ...
+    type: object
+    x-go-package: caching-service/data
+info: {}
+paths:
+  /employee:
+    get:
+      description: Return a list of employee from the cache
+      operationId: listEmployee
+      responses:
+        "200":
+          $ref: '#/responses/employeesResponse'
+      tags:
+      - products
+responses:
+  employeesResponse:
+    description: A list of employee
+    schema:
+      items:
+        $ref: '#/definitions/Employee'
+      type: array
+swagger: "2.0"

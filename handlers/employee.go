@@ -21,6 +21,11 @@ func NewEmployee(l *log.Logger) *Employee {
 	return &Employee{l}
 }
 
+// swagger:route GET /employee products listEmployee
+// Return a list of employee from the cache
+// responses:
+//	200: employeesResponse
+
 //GetEmployees ... http request handler to return all employees
 func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	emp.l.Println("Handle Get all employees")

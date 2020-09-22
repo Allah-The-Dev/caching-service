@@ -10,6 +10,8 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+
+	"github.com/go-openapi/runtime/middleware"
 )
 
 // Tweak configuration values here.
@@ -75,7 +77,7 @@ func initializeHTTPRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	//set router prefix
-	subRouter := router.PathPrefix("/api/v1/employee").Subrouter()
+	subRouter := router.PathPrefix("/api/v1").Subrouter()
 
 	//get router
 	getRouter := subRouter.Methods(http.MethodGet).Subrouter()
@@ -84,11 +86,18 @@ func initializeHTTPRouter() *mux.Router {
 	postRouter := subRouter.Methods(http.MethodPost).Subrouter()
 
 	//employee get router
-	getRouter.HandleFunc("", empHandler.GetEmployees)
-	getRouter.HandleFunc("/{id:[0-9]+}", empHandler.GetEmployee)
+	getRouter.HandleFunc("/employee", empHandler.GetEmployees)
+	getRouter.HandleFunc("/employee/{id:[0-9]+}", empHandler.GetEmployee)
 
 	//employee post router
-	postRouter.HandleFunc("", empHandler.AddEmployee)
+	postRouter.HandleFunc("/employee", empHandler.AddEmployee)
+
+	// handler for documentation
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+
+	getRouter.Handle("/docs", sh)
+	getRouter.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
 
 	return router
 }
