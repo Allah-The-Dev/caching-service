@@ -18,6 +18,12 @@ func (emp *Employee) ToJSON(w io.Writer) error {
 	return e.Encode(emp)
 }
 
+//FromJSON .... deserialize employee data into a destination pointer
+func (emp *Employee) FromJSON(r io.Reader) error {
+	d := json.NewDecoder(r)
+	return d.Decode(emp)
+}
+
 //Employees ...
 type Employees []*Employee
 
@@ -40,6 +46,18 @@ func GetEmployee(id int) *Employee {
 		}
 	}
 	return nil
+}
+
+//AddEmployee ...
+func AddEmployee(emp *Employee) int {
+	emp.ID = getNextID()
+	empList = append(empList, emp)
+	return emp.ID
+}
+
+func getNextID() int {
+	lastEmp := empList[len(empList)-1]
+	return lastEmp.ID + 1
 }
 
 var empList = []*Employee{

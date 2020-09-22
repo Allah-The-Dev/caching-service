@@ -75,14 +75,20 @@ func initializeHTTPRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	//set router prefix
-	subRouter := router.PathPrefix("/api/v1").Subrouter()
+	subRouter := router.PathPrefix("/api/v1/employee").Subrouter()
 
 	//get router
 	getRouter := subRouter.Methods(http.MethodGet).Subrouter()
 
+	//post router
+	postRouter := subRouter.Methods(http.MethodPost).Subrouter()
+
 	//employee get router
-	getRouter.HandleFunc("/employee", empHandler.GetEmployees)
-	getRouter.HandleFunc("/employee/{id:[0-9]+}", empHandler.GetEmployee)
+	getRouter.HandleFunc("", empHandler.GetEmployees)
+	getRouter.HandleFunc("/{id:[0-9]+}", empHandler.GetEmployee)
+
+	//employee post router
+	postRouter.HandleFunc("", empHandler.AddEmployee)
 
 	return router
 }
