@@ -2,34 +2,87 @@ definitions:
   Employee:
     properties:
       id:
+        description: the id of employee
         format: int64
+        minimum: 1
         type: integer
         x-go-name: ID
       name:
+        description: the name of employee
+        maxLength: 255
         type: string
         x-go-name: Name
       unit:
+        description: the unit of employee
+        maxLength: 255
         type: string
         x-go-name: Unit
+    required:
+    - name
+    - unit
     title: Employee ...
     type: object
     x-go-package: caching-service/data
+  GenericError:
+    description: GenericError is a generic error message returned by a server
+    properties:
+      message:
+        type: string
+        x-go-name: Message
+    type: object
+    x-go-package: caching-service/handlers
 info: {}
 paths:
   /employee:
+    post:
+      description: Return new employee id for posted employee data
+      operationId: addEmployee
+      responses:
+        "200":
+          $ref: '#/responses/employeesResponse'
+        "400":
+          $ref: '#/responses/badRequestResponse'
+      tags:
+      - Employee
+  /employee/{id}:
     get:
-      description: Return a list of employee from the cache
+      description: Return one employee from the cache based on id
+      operationId: employeeInfo
+      responses:
+        "200":
+          $ref: '#/responses/employeeResponse'
+        "400":
+          $ref: '#/responses/badRequestResponse'
+        "500":
+          $ref: '#/responses/internalServerErrorResponse'
+      tags:
+      - Employee
+  /employees:
+    get:
+      description: Return list of employees available in cache
       operationId: listEmployee
       responses:
         "200":
           $ref: '#/responses/employeesResponse'
       tags:
-      - products
+      - Employee
 responses:
+  badRequestResponse:
+    description: BadReqeuest something is wrong with request
+    schema:
+      $ref: '#/definitions/GenericError'
+  employeeResponse:
+    description: Employee info
+    schema:
+      $ref: '#/definitions/Employee'
   employeesResponse:
     description: A list of employee
     schema:
       items:
         $ref: '#/definitions/Employee'
       type: array
+  internalServerErrorResponse:
+    description: InternalServerError something bad happended in server
+    schema:
+      $ref: '#/definitions/GenericError'
 swagger: "2.0"

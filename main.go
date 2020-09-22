@@ -93,11 +93,10 @@ func initializeHTTPRouter() *mux.Router {
 	postRouter.HandleFunc("/employee", empHandler.AddEmployee)
 
 	// handler for documentation
-	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml"}
+	opts := middleware.RedocOpts{SpecURL: "/swagger.yaml", BasePath: "/api/v1"}
 	sh := middleware.Redoc(opts, nil)
-
 	getRouter.Handle("/docs", sh)
-	getRouter.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
+	router.Handle("/swagger.yaml", http.FileServer(http.Dir("./"))).Methods(http.MethodGet)
 
 	return router
 }

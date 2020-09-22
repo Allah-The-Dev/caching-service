@@ -21,8 +21,14 @@ func NewEmployee(l *log.Logger) *Employee {
 	return &Employee{l}
 }
 
-// swagger:route GET /employee products listEmployee
-// Return a list of employee from the cache
+// GenericError is a generic error message returned by a server
+type GenericError struct {
+	Message string `json:"message"`
+}
+
+// swagger:route GET /employees Employee listEmployee
+// Return list of employees available in cache
+//
 // responses:
 //	200: employeesResponse
 
@@ -37,6 +43,14 @@ func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Unable to serialize employee list", http.StatusInternalServerError)
 	}
 }
+
+// swagger:route GET /employee/{id} Employee employeeInfo
+// Return one employee from the cache based on id
+//
+// responses:
+//	200: employeeResponse
+//	400: badRequestResponse
+// 	500: internalServerErrorResponse
 
 //GetEmployees ... http request handler to return all employees
 func (emp *Employee) GetEmployee(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +70,13 @@ func (emp *Employee) GetEmployee(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+// swagger:route POST /employee Employee addEmployee
+// Return new employee id for posted employee data
+//
+// responses:
+//	200: employeesResponse
+//	400: badRequestResponse
 
 //AddEmployee ...
 func (emp *Employee) AddEmployee(w http.ResponseWriter, r *http.Request) {

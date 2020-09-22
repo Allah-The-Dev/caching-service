@@ -6,9 +6,22 @@ import (
 )
 
 //Employee ...
+// swagger:model
 type Employee struct {
-	ID   int    `json:"id"`
+	// the id of employee
+	//
+	// required: false
+	// min: 1
+	ID int `json:"id"`
+	// the name of employee
+	//
+	// required: true
+	// max length: 255
 	Name string `json:"name"`
+	// the unit of employee
+	//
+	// required: true
+	// max length: 255
 	Unit string `json:"unit"`
 }
 
