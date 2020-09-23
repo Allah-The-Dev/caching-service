@@ -94,5 +94,6 @@ func AddEmployee(emp *Employee) (interface{}, error) {
 		return 0, err
 	}
 	emp.UpdateEmployeeCache()
+	emp.PublishToKafka()
 	return insertOneRes.InsertedID, nil
 }
