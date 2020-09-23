@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 
 	"caching-service/data"
 
@@ -36,10 +35,16 @@ type GenericError struct {
 func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	emp.l.Println("Handle Get all employees")
 
-	empList := data.GetEmployees()
+	var empList data.Employees
+	var err error
+	if empList, err = data.GetEmployees(); err != nil {
+		emp.l.Println(err)
+		http.Error(w, "Unable to fetch employee list from DB", http.StatusInternalServerError)
+	}
 
-	err := empList.ToJSON(w)
+	err = empList.ToJSON(w)
 	if err != nil {
+		emp.l.Println(err)
 		http.Error(w, "Unable to serialize employee list", http.StatusInternalServerError)
 	}
 }
@@ -57,15 +62,18 @@ func (emp *Employee) GetEmployee(w http.ResponseWriter, r *http.Request) {
 	emp.l.Println("Handle Get employee")
 
 	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-	if err != nil {
-		http.Error(w, "Unable to convert id", http.StatusBadRequest)
-		return
+	name := vars["name"]
+
+	var empInfo *data.Employee
+	var err error
+	if empInfo, err = data.GetEmployee(name); err != nil {
+		emp.l.Println(err)
+		http.Error(w, "Unable to get employee info from DB", http.StatusInternalServerError)
 	}
-	empInfo := data.GetEmployee(id)
 
 	err = empInfo.ToJSON(w)
 	if err != nil {
+		emp.l.Println(err)
 		http.Error(w, "Unable to serialize employee info", http.StatusInternalServerError)
 		return
 	}

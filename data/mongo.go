@@ -22,7 +22,7 @@ func InitializeMongoClient(mongoDBURI string) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	if err = client.Connect(ctx); err != nil {
 		return nil, err
