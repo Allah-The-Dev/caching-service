@@ -90,8 +90,13 @@ func (emp *Employee) AddEmployee(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	newEmpID := data.AddEmployee(&empInfo)
+	newEmpID, err := data.AddEmployee(&empInfo)
+	if err != nil {
+		emp.l.Println("[Error] unable to insert data in database")
+		http.Error(w, "Error inserting employee info into DB", http.StatusBadRequest)
+		return
+	}
 	w.WriteHeader(http.StatusCreated)
-	msg := fmt.Sprintf("Employee added successfully with id %d", newEmpID)
+	msg := fmt.Sprintf("Employee added successfully with id %v", newEmpID)
 	w.Write([]byte(msg))
 }

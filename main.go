@@ -12,6 +12,8 @@ import (
 	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/runtime/middleware"
+
+	"caching-service/data"
 )
 
 // Tweak configuration values here.
@@ -23,7 +25,24 @@ const (
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
 )
 
+var (
+	mongoDBURI     = "mongodb://USER:PASS@ID:PORT/?authSource=admin&readPreference=primary&ssl=false"
+	cacheServiceDB = "cacheService"
+)
+
 func main() {
+
+	//mongo client
+	mongoClient, err := data.InitializeMongoClient(mongoDBURI)
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err = mongoClient.Disconnect(context.Background()); err != nil {
+			panic(err)
+		}
+	}()
+	data.MongoClient = mongoClient
 
 	router := initializeHTTPRouter()
 

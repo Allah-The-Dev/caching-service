@@ -1,18 +1,16 @@
 package data
 
 import (
+	"context"
 	"encoding/json"
 	"io"
+
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 //Employee ...
 // swagger:model
 type Employee struct {
-	// the id of employee
-	//
-	// required: false
-	// min: 1
-	ID int `json:"id"`
 	// the name of employee
 	//
 	// required: true
@@ -62,26 +60,11 @@ func GetEmployee(id int) *Employee {
 }
 
 //AddEmployee ...
-func AddEmployee(emp *Employee) int {
-	emp.ID = getNextID()
-	empList = append(empList, emp)
-	return emp.ID
-}
-
-func getNextID() int {
-	lastEmp := empList[len(empList)-1]
-	return lastEmp.ID + 1
-}
-
-var empList = []*Employee{
-	&Employee{
-		ID:   1,
-		Name: "foo",
-		Unit: "ISRO",
-	},
-	&Employee{
-		ID:   2,
-		Name: "bar",
-		Unit: "NASA",
-	},
+func AddEmployee(emp *Employee) (interface{}, error) {
+	var insertOneRes *mongo.InsertOneResult
+	var err error
+	if insertOneRes, err = GetCollection().InsertOne(context.Background(), emp); err != nil {
+		return 0, err
+	}
+	return insertOneRes.InsertedID, nil
 }
