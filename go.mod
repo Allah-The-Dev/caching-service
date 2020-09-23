@@ -8,6 +8,7 @@ require (
 	github.com/go-openapi/spec v0.19.9 // indirect
 	github.com/go-openapi/validate v0.19.11 // indirect
 	github.com/go-swagger/go-swagger v0.25.0 // indirect
+	github.com/gomodule/redigo v1.8.2
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/kr/pretty v0.2.1 // indirect

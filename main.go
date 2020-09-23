@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/runtime/middleware"
@@ -26,13 +27,13 @@ const (
 )
 
 var (
-	mongoDBURI     = "mongodb://USER:PASS@ID:PORT/?authSource=admin&readPreference=primary&ssl=false"
+	mongoDBURI     = "mongodb://kjhihjh/?authSource=admin&readPreference=primary&ssl=false"
 	cacheServiceDB = "cacheService"
 )
 
 func main() {
 
-	//mongo client
+	//global mongo client
 	mongoClient, err := data.InitializeMongoClient(mongoDBURI)
 	if err != nil {
 		panic(err)
@@ -44,6 +45,16 @@ func main() {
 	}()
 	data.MongoClient = mongoClient
 
+	//global redis client pool
+	data.RedisClientPool = &redis.Pool{
+		MaxIdle:     10,
+		IdleTimeout: 240 * time.Second,
+		Dial: func() (redis.Conn, error) {
+			return redis.Dial("tcp", "")
+		},
+	}
+
+	//http REST routes
 	router := initializeHTTPRouter()
 
 	// HTTP server configuration
@@ -88,6 +99,7 @@ func main() {
 func initializeHTTPRouter() *mux.Router {
 	//custom logger
 	logger := log.New(os.Stdout, "employee-api", log.LstdFlags)
+	data.CLogger = logger
 
 	//employee handler
 	empHandler := handlers.NewEmployee(logger)
@@ -106,7 +118,7 @@ func initializeHTTPRouter() *mux.Router {
 
 	//employee get router
 	getRouter.HandleFunc("/employee", empHandler.GetEmployees)
-	getRouter.HandleFunc("/employee/{id:[0-9]+}", empHandler.GetEmployee)
+	getRouter.HandleFunc("/employee/{name:[a-zA-Z]+}", empHandler.GetEmployee)
 
 	//employee post router
 	postRouter.HandleFunc("/employee", empHandler.AddEmployee)

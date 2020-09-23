@@ -4,11 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"io"
+	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+var CLogger *log.Logger
 
 //Employee ...
 // swagger:model
@@ -68,7 +71,13 @@ func GetEmployees() (Employees, error) {
 
 //GetEmployee ...
 func GetEmployee(name string) (*Employee, error) {
+
 	emp := &Employee{}
+
+	if err := emp.GetEmployeeFromCache(name); err != nil {
+		return emp, err
+	}
+
 	query := bson.M{"name": name}
 	opts := options.FindOne()
 	if err := GetCollection().FindOne(context.TODO(), query, opts).Decode(emp); err != nil {
@@ -84,5 +93,6 @@ func AddEmployee(emp *Employee) (interface{}, error) {
 	if insertOneRes, err = GetCollection().InsertOne(context.TODO(), emp); err != nil {
 		return 0, err
 	}
+	emp.UpdateEmployeeCache()
 	return insertOneRes.InsertedID, nil
 }
