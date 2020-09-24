@@ -27,8 +27,9 @@ const (
 )
 
 var (
-	mongoDBURI     = "mongodb://kjhihjh/?authSource=admin&readPreference=primary&ssl=false"
+	mongoDBURI     = "mongodb://sdfr/?authSource=admin&readPreference=primary&ssl=false"
 	cacheServiceDB = "cacheService"
+	redisURI       = ""
 )
 
 func main() {
@@ -50,7 +51,7 @@ func main() {
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", "")
+			return redis.Dial("tcp", redisURI)
 		},
 	}
 
@@ -82,6 +83,9 @@ func main() {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt)
 	signal.Notify(c, os.Kill)
+
+	//global kafka consumer
+	data.KafkaConsumer()
 
 	//block until signal is received
 	sig := <-c

@@ -6,18 +6,20 @@ import (
 	"github.com/gomodule/redigo/redis"
 )
 
+//RedisClientPool ...
 var RedisClientPool *redis.Pool
 
-func (emp *Employee) UpdateEmployeeCache() error {
+//UpdateEmployeeCache ...
+func (emp *Employee) UpdateEmployeeCache() {
 
 	CLogger.Printf("cache updated for emp %s\n", emp.Name)
 	conn := RedisClientPool.Get()
 	if _, err := conn.Do("HMSET", redis.Args{}.Add(emp.Name).AddFlat(emp)...); err != nil {
-		return err
+		CLogger.Println(err)
 	}
-	return nil
 }
 
+//GetEmployeeFromCache ...
 func (emp *Employee) GetEmployeeFromCache(name string) error {
 
 	conn := RedisClientPool.Get()

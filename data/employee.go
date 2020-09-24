@@ -11,6 +11,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+//CLogger ...
 var CLogger *log.Logger
 
 //Employee ...
@@ -54,7 +55,7 @@ func GetEmployees() (Employees, error) {
 
 	empList := make([]*Employee, 0)
 
-	cur, err := GetCollection().Find(context.TODO(), bson.D{{}})
+	cur, err := getCollection().Find(context.TODO(), bson.D{{}})
 	if err != nil {
 		return empList, err
 	}
@@ -80,7 +81,7 @@ func GetEmployee(name string) (*Employee, error) {
 
 	query := bson.M{"name": name}
 	opts := options.FindOne()
-	if err := GetCollection().FindOne(context.TODO(), query, opts).Decode(emp); err != nil {
+	if err := getCollection().FindOne(context.TODO(), query, opts).Decode(emp); err != nil {
 		return emp, err
 	}
 	return emp, nil
@@ -90,10 +91,9 @@ func GetEmployee(name string) (*Employee, error) {
 func AddEmployee(emp *Employee) (interface{}, error) {
 	var insertOneRes *mongo.InsertOneResult
 	var err error
-	if insertOneRes, err = GetCollection().InsertOne(context.TODO(), emp); err != nil {
+	if insertOneRes, err = getCollection().InsertOne(context.TODO(), emp); err != nil {
 		return 0, err
 	}
-	emp.UpdateEmployeeCache()
 	emp.PublishToKafka()
 	return insertOneRes.InsertedID, nil
 }

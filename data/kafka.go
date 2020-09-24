@@ -6,13 +6,17 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
+//PublishToKafka ...
 func (emp *Employee) PublishToKafka() {
 
 	CLogger.Println("publishing emp data to kafka topic")
 
-	p, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost"})
+	p, err := kafka.NewProducer(
+		&kafka.ConfigMap{
+			"bootstrap.servers": "",
+		})
 	if err != nil {
-		panic(err)
+		CLogger.Println(err)
 	}
 
 	defer p.Close()
@@ -35,7 +39,7 @@ func (emp *Employee) PublishToKafka() {
 	topic := "employee"
 	empBytesArr, err := json.Marshal(emp)
 	if err != nil {
-		return err
+		CLogger.Println(err)
 	}
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
@@ -44,4 +48,37 @@ func (emp *Employee) PublishToKafka() {
 
 	// Wait for message deliveries before shutting down
 	p.Flush(15 * 1000)
+}
+
+//KafkaConsumer ...
+func KafkaConsumer() {
+	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+		"bootstrap.servers": "",
+		"group.id":          "myGroup",
+		"auto.offset.reset": "earliest",
+	})
+	defer c.Close()
+
+	if err != nil {
+		CLogger.Println(err)
+	}
+
+	c.SubscribeTopics([]string{"employee", "^aRegex.*[Ee]mployee.*"}, nil)
+
+	for {
+		msg, err := c.ReadMessage(-1)
+		if err == nil && msg != nil {
+			CLogger.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+		} else {
+			// The client will automatically try to recover from all errors.
+			CLogger.Printf("Consumer error: %v (%v)\n", err, msg)
+		}
+
+		emp := &Employee{}
+		if err = json.Unmarshal(msg.Value, emp); err != nil {
+			CLogger.Println(err)
+		} else {
+			emp.UpdateEmployeeCache()
+		}
+	}
 }

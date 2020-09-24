@@ -12,9 +12,11 @@ var (
 	employeeCollection = "employee"
 	db                 = "cacheService"
 	collection         = "employee"
-	MongoClient        *mongo.Client
+	//MongoClient ...
+	MongoClient *mongo.Client
 )
 
+//InitializeMongoClient ...
 func InitializeMongoClient(mongoDBURI string) (*mongo.Client, error) {
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoDBURI))
@@ -30,6 +32,6 @@ func InitializeMongoClient(mongoDBURI string) (*mongo.Client, error) {
 	return client, nil
 }
 
-func GetCollection() *mongo.Collection {
+func getCollection() *mongo.Collection {
 	return MongoClient.Database(db).Collection(collection)
 }
