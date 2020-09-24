@@ -1,7 +1,7 @@
 FROM golang:latest as builder
 WORKDIR /go/src/app
 COPY . .
-RUN go get -u ./...
+RUN go get -v ./...
 RUN CGO_ENABLED=0 GOOS=linux go build -o app
 
 FROM alpine:latest
