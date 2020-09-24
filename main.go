@@ -3,6 +3,7 @@ package main
 import (
 	"caching-service/handlers"
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
