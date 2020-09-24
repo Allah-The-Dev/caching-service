@@ -6,6 +6,8 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
+var KafkaHost string
+
 //PublishToKafka ...
 func (emp *Employee) PublishToKafka() {
 
@@ -13,7 +15,7 @@ func (emp *Employee) PublishToKafka() {
 
 	p, err := kafka.NewProducer(
 		&kafka.ConfigMap{
-			"bootstrap.servers": "",
+			"bootstrap.servers": KafkaHost,
 		})
 	if err != nil {
 		CLogger.Println(err)
@@ -53,7 +55,7 @@ func (emp *Employee) PublishToKafka() {
 //KafkaConsumer ...
 func KafkaConsumer() {
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "",
+		"bootstrap.servers": KafkaHost,
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})

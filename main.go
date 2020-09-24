@@ -24,15 +24,18 @@ const (
 	writeTimeout      = 10 * time.Second
 	idleTimeout       = 90 * time.Second
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
+	mongoDBURIStr     = "mongodb://%s/?authSource=admin&readPreference=primary&ssl=false"
 )
 
 var (
-	mongoDBURI     = "mongodb://sdfr/?authSource=admin&readPreference=primary&ssl=false"
-	cacheServiceDB = "cacheService"
-	redisURI       = ""
+	mongoDBURI, redisURI string
+	cacheServiceDB       = "cacheService"
 )
 
 func main() {
+
+	//initialize app config
+	initializeAppConfig()
 
 	//global mongo client
 	mongoClient, err := data.InitializeMongoClient(mongoDBURI)
@@ -98,6 +101,12 @@ func main() {
 
 	log.Println("Sutting down server")
 	os.Exit(0)
+}
+
+func initializeAppConfig() {
+	mongoDBURI = fmt.Sprintf(mongoDBURIStr, os.Getenv("MONGO_URI"))
+	redisURI = os.Getenv("REDIS_URI")
+	data.KafkaHost = os.Getenv("KAFKA_HOST")
 }
 
 func initializeHTTPRouter() *mux.Router {
