@@ -94,6 +94,6 @@ func AddEmployee(emp *Employee) (interface{}, error) {
 	if insertOneRes, err = getCollection().InsertOne(context.TODO(), emp); err != nil {
 		return 0, err
 	}
-	emp.PublishToKafka()
+	defer emp.PublishToKafka()
 	return insertOneRes.InsertedID, nil
 }
