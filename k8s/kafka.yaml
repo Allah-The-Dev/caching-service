@@ -1,34 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-zookeeper-deployment
+  name: kafka-deployment
   labels:
-    app: kafka-zookeeper
+    app: kafka
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-zookeeper
+      app: kafka
   template:
     metadata:
       labels: 
-        app: kafka-zookeeper
+        app: kafka
     spec:
       containers:
-      - name: zookeeper
-        image: bitnami/zookeeper
-        ports:
-        - containerPort: 2181
-        env:
-        - name: ALLOW_ANONYMOUS_LOGIN
-          value: yes
       -name: kafka
         image: bitnami/kafka
         ports:
         - containerPort: 9092
         env:
-        - name: ALLOW_ANONYMOUS_LOGIN
-          value: yes
         - name: KAFKA_BROKER_ID
           value: 1
         - name: KAFKA_LISTENERS
@@ -36,9 +27,11 @@ spec:
         - name: KAFKA_ADVERTISED_LISTENERS
           value: PLAINTEXT://127.0.0.1:9092
         - name: KAFKA_ZOOKEEPER_CONNECT
-          value: zookeeper:2181
+          value: zookeeper-service:2181 
         - name: ALLOW_PLAINTEXT_LISTENER
           value: yes
+        - name: KAFKA_CREATE_TOPICS:
+          value: employee:1:1
 
 ---
 apiVersion: v1
