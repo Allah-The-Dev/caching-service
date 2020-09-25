@@ -1,7 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka-broker0
+  name: kafka-broker
+  labels:
+    app: kafka
 spec:
   replicas: 1
   selector:
