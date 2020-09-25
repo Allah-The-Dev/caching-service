@@ -33,8 +33,6 @@ spec:
             configMapKeyRef:
               name: caching-service-app-config
               key: zookeeper_url
-        - name: ALLOW_PLAINTEXT_LISTENER
-          value: "yes"
         - name: KAFKA_CREATE_TOPICS
           value: employee:1:1
 
