@@ -118,7 +118,7 @@ func initializeAppConfig() {
 	logger.Printf("mongodb server URI is : %s", dbServer)
 
 	//redis config
-	redisURI = os.Getenv("REDIS_SERVER")
+	redisURI = fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVER"), os.Getenv("REDIS_PORT"))
 
 	//kafka config
 	data.KafkaHost = os.Getenv("KAFKA_SERVER")

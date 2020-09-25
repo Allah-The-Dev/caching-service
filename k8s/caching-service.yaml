@@ -34,6 +34,8 @@ spec:
             configMapKeyRef:
               name: caching-service-app-config
               key: redis_url
+        - name: REDIS_PORT
+          value: 6379
         - name: KAFKA_SERVER
           valueFrom:
             configMapKeyRef:

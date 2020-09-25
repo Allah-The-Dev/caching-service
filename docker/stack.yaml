@@ -59,6 +59,7 @@ services:
       - MONGODB_ADMINPASSWORD=example
       - REDIS_SERVER=${REDIS_SERVER}
       - KAFKA_SERVER=${KAFKA_SERVER}
+      - REDIS_PORT=${REDIS_PORT}
 
 
 volumes:
