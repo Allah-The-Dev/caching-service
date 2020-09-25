@@ -71,16 +71,16 @@ func KafkaConsumer() {
 		msg, err := c.ReadMessage(-1)
 		if err == nil && msg != nil {
 			CLogger.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+
+			emp := &Employee{}
+			if err = json.Unmarshal(msg.Value, emp); err != nil {
+				CLogger.Println(err)
+			} else {
+				emp.UpdateEmployeeCache()
+			}
 		} else {
 			// The client will automatically try to recover from all errors.
 			CLogger.Printf("Consumer error: %v (%v)\n", err, msg)
-		}
-
-		emp := &Employee{}
-		if err = json.Unmarshal(msg.Value, emp); err != nil {
-			CLogger.Println(err)
-		} else {
-			emp.UpdateEmployeeCache()
 		}
 	}
 }
