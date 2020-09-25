@@ -57,11 +57,11 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - MONGODB_SERVER=
+      - MONGODB_SERVER=${MONGODB_SERVER}
       - MONGODB_ADMINUSERNAME=root
       - MONGODB_ADMINPASSWORD=example
-      - REDIS_SERVER=
-      - KAFKA_SERVER=
+      - REDIS_SERVER=${REDIS_SERVER}
+      - KAFKA_SERVER=${KAFKA_SERVER}
 
 
 volumes:
