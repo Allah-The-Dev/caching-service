@@ -69,6 +69,7 @@ func (emp *Employee) GetEmployee(w http.ResponseWriter, r *http.Request) {
 	if empInfo, err = data.GetEmployee(name); err != nil {
 		emp.l.Println(err)
 		http.Error(w, "Unable to get employee info from DB", http.StatusInternalServerError)
+		return
 	}
 
 	err = empInfo.ToJSON(w)
