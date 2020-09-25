@@ -7,3 +7,4 @@ data:
   redis_url: redis-service
   kafka_url: kafka-service
   zookeeper_url: zookeeper-service
+  kafka_url: kafka-service
