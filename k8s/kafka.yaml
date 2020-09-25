@@ -29,9 +29,7 @@ spec:
         - name: KAFKA_ADVERTISED_HOST_NAME
           value: 192.168.1.240
         - name: KAFKA_ZOOKEEPER_CONNECT
-          configMapKeyRef:
-              name: caching-service-app-config
-              key: zookeeper_url
+          value: zookeeper-service:2181
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
         - name: KAFKA_CREATE_TOPICS:
