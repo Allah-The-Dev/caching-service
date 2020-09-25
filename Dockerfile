@@ -1,8 +1,9 @@
 FROM golang:latest as builder
+RUN apk add --no-cache libc6-compat
 WORKDIR /go/src/app
 COPY . .
 RUN go get -v ./...
-RUN GOOS=linux go build -o app
+RUN CGO_ENABLED=1 GOOS=linux go build -o app
 
 FROM alpine:latest
 WORKDIR /go/src/app
