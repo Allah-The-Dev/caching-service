@@ -54,7 +54,7 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - MONGO_SERVER=
+      - MONGODB_SERVER=
       - MONGODB_ADMINUSERNAME=root
       - MONGODB_ADMINPASSWORD=example
       - REDIS_SERVER=
