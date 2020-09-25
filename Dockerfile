@@ -8,5 +8,6 @@ RUN GOOS=linux GOARCH=amd64 go build -o caching-service -tags musl
 FROM alpine:latest as runner
 WORKDIR /root/
 COPY --from=builder /go/app/caching-service .
+COPY --from=builder /go/app/swagger.yaml .
 ENTRYPOINT /root/caching-service
 EXPOSE 8080
