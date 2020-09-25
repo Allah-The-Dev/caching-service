@@ -40,6 +40,7 @@ func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	if empList, err = data.GetEmployees(); err != nil {
 		emp.l.Println(err)
 		http.Error(w, "Unable to fetch employee list from DB", http.StatusInternalServerError)
+		return
 	}
 
 	err = empList.ToJSON(w)
