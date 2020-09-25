@@ -44,6 +44,7 @@ func main() {
 	initializeAppConfig()
 
 	//global mongo client
+	logger.Printf("mongo db uri is : %s", mongoDBURI)
 	mongoClient, err := data.InitializeMongoClient(mongoDBURI)
 	if err != nil {
 		panic(err)
