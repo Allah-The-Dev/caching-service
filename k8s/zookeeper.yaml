@@ -24,6 +24,8 @@ spec:
           value: "1"
         - name: ZOOKEEPER_SERVER_1
           value: zoo1
+        - name: ALLOW_ANONYMOUS_LOGIN
+          value: yes
 ---
 apiVersion: v1
 kind: Service
