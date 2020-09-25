@@ -1,9 +1,9 @@
 FROM golang:latest as builder
-RUN apk add --no-cache libc6-compat
+RUN apt-get update && apt-get install -y gcc-aarch64-linux-gnu
 WORKDIR /go/src/app
 COPY . .
 RUN go get -v ./...
-RUN CGO_ENABLED=1 GOOS=linux go build -o app
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o app
 
 FROM alpine:latest
 WORKDIR /go/src/app
