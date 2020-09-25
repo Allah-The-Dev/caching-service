@@ -36,6 +36,10 @@ var (
 
 func main() {
 
+	//custom logger
+	logger = log.New(os.Stdout, "employee-api", log.LstdFlags)
+	data.CLogger = logger
+
 	//initialize app config
 	initializeAppConfig()
 
@@ -122,9 +126,6 @@ func initializeAppConfig() {
 }
 
 func initializeHTTPRouter() *mux.Router {
-	//custom logger
-	logger = log.New(os.Stdout, "employee-api", log.LstdFlags)
-	data.CLogger = logger
 
 	//employee handler
 	empHandler := handlers.NewEmployee(logger)
