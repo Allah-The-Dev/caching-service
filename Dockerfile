@@ -1,9 +1,9 @@
-FROM golang:latest as builder
-RUN apt-get update && apt-get install -y gcc-aarch64-linux-gnu
+FROM golang:1.14.2-alpine as builder
+RUN apk add alpine-sdk
 WORKDIR /go/src/app
 COPY . .
 RUN go get -v ./...
-RUN CGO_ENABLED=1 CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build -o app .
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o app .
 
 FROM alpine:latest
 WORKDIR /go/src/app
