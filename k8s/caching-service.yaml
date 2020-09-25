@@ -27,7 +27,7 @@ spec:
               key: mongo-root-username
         - name: MONOGODB_ADMINPASSWORD
           valueFrom:
-            configMapKeyRef:
+            secretKeyRef:
               name: mongodb-secret
               key: mongo-root-password
         - name: MONGODB_SERVER
