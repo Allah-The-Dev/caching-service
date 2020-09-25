@@ -6,3 +6,4 @@ data:
   mongodb_url: mongodb-service
   redis_url: redis-service
   kafka_url: kafka-service
+  zookeeper_url: zookeeper-service

@@ -39,12 +39,12 @@ spec:
           valueFrom:
             configMapKeyRef:
               name: caching-service-app-config
-              key: redis-service
+              key: redis_url
         - name: KAFKA_SERVER
           valueFrom:
             configMapKeyRef:
               name: caching-service-app-config
-              key: kafka-service
+              key: kafka_url
 
 ---
 apiVersion: v1
