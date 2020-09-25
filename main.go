@@ -25,8 +25,7 @@ const (
 	writeTimeout      = 10 * time.Second
 	idleTimeout       = 90 * time.Second
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
-	mongoDBURIStr     = "mongodb://%s:%s@%s:%s/?authSource=admin&readPreference=primary&ssl=false"
-	redisURI          = "%s:%s"
+	mongoDBURIStr     = "mongodb://%s@%s:%s/?authSource=admin&readPreference=primary&ssl=false"
 )
 
 var (
@@ -108,17 +107,18 @@ func main() {
 
 func initializeAppConfig() {
 	//mongo db config
-	dbServer, dbPort := os.Getenv("MONGODB_SERVER"), os.Getenv("MONGODB_PORT")
+	dbServer := os.Getenv("MONGODB_SERVER")
 	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
-	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbPort, dbUsername, dbPassword)
+	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbUsername, dbPassword)
 	logger.Printf("mongodb server and port  is : %s, %s", dbServer, dbPort)
 
 	//redis config
-	redisServer, redisPort := os.Getenv("REDIS_SERVER"), os.Getenv("REDIS_PORT")
-	redisURI = fmt.Sprintf(redisURI, redisServer, redisPort)
+	redisURI = os.Getenv("REDIS_SERVER")
 
 	//kafka config
-	data.KafkaHost = os.Getenv("KAFKA_HOST")
+	data.KafkaHost = os.Getenv("KAFKA_SERVER")
+
+	logger.Printf("redis, kafka : %s %s", redisURI)
 }
 
 func initializeHTTPRouter() *mux.Router {

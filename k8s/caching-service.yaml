@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: caching-service
+  labels:
+    app: caching-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: caching-service
+  template:
+    metadata:
+      labels: 
+        app: caching-service
+    spec:
+      containers:
+      - name: caching-service
+        image: allahthedev/caching-service
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MONOGODB_ADMINUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
+        - name: MONOGODB_ADMINPASSWORD
+          valueFrom:
+            configMapKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+        - name: MONGODB_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: caching-service-app-config
+              key: mongodb_url
+        - name: REDIS_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: caching-service-app-config
+              key: redis-service
+        - name: KAFKA_SERVER
+          valueFrom:
+            configMapKeyRef:
+              name: caching-service-app-config
+              key: kafka-service
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: caching-service
+spec:
+  selector:
+    app: caching-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

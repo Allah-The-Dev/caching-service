@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: caching-service-app-config
+data:
+  mongodb_url: mongodb-service
+  redis_url: redis-service
+  kafka_url: kafka-service
