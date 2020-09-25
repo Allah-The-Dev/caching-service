@@ -25,7 +25,7 @@ const (
 	writeTimeout      = 10 * time.Second
 	idleTimeout       = 90 * time.Second
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
-	mongoDBURIStr     = "mongodb://%s@%s:%s/?authSource=admin&readPreference=primary&ssl=false"
+	mongoDBURIStr     = "mongodb://%s:%s@%s/?authSource=admin&readPreference=primary&ssl=false"
 )
 
 var (
@@ -114,7 +114,7 @@ func initializeAppConfig() {
 	//mongo db config
 	dbServer := os.Getenv("MONGODB_SERVER")
 	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
-	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbUsername, dbPassword)
+	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbUsername, dbPassword, dbServer)
 	logger.Printf("mongodb server URI is : %s", dbServer)
 
 	//redis config
