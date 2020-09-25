@@ -57,12 +57,14 @@ func GetEmployees() (Employees, error) {
 
 	cur, err := getCollection().Find(context.TODO(), bson.D{{}})
 	if err != nil {
+		CLogger.Println(err)
 		return empList, err
 	}
 
 	for cur.Next(context.TODO()) {
 		var emp Employee
 		if err := cur.Decode(&emp); err != nil {
+			CLogger.Println(err)
 			return empList, err
 		}
 		empList = append(empList, &emp)
@@ -76,12 +78,14 @@ func GetEmployee(name string) (*Employee, error) {
 	emp := &Employee{}
 
 	if err := emp.GetEmployeeFromCache(name); err == nil {
+		CLogger.Println(err)
 		return emp, nil
 	}
 
 	query := bson.M{"name": name}
 	opts := options.FindOne()
 	if err := getCollection().FindOne(context.TODO(), query, opts).Decode(emp); err != nil {
+		CLogger.Println(err)
 		return emp, err
 	}
 	return emp, nil
@@ -92,6 +96,7 @@ func AddEmployee(emp *Employee) (interface{}, error) {
 	var insertOneRes *mongo.InsertOneResult
 	var err error
 	if insertOneRes, err = getCollection().InsertOne(context.TODO(), emp); err != nil {
+		CLogger.Println(err)
 		return 0, err
 	}
 	defer emp.PublishToKafka()
