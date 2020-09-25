@@ -9,12 +9,10 @@ spec:
   selector:
     matchLabels:
       app: kafka
-      id: "0"
   template:
     metadata:
       labels: 
         app: kafka
-        id: "0"
     spec:
       containers:
       - name: kafka
@@ -33,6 +31,8 @@ spec:
             configMapKeyRef:
               name: caching-service-app-config
               key: zookeeper_url
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
         - name: KAFKA_CREATE_TOPICS
           value: employee:1:1
 
@@ -44,7 +44,6 @@ metadata:
 spec:
   selector:
     app: kafka
-    id: "0"
   ports:
     - protocol: TCP
       port: 9092
