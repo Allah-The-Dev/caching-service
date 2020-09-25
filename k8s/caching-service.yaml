@@ -54,7 +54,9 @@ metadata:
 spec:
   selector:
     app: caching-service
+  type: LoadBalancer
   ports:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+      nodePort: 30000
