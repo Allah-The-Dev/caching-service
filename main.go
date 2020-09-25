@@ -114,7 +114,7 @@ func initializeAppConfig() {
 	dbServer := os.Getenv("MONGODB_SERVER")
 	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
 	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbUsername, dbPassword)
-	logger.Printf("mongodb server and port  is : %s", dbServer)
+	logger.Printf("mongodb server URI is : %s", dbServer)
 
 	//redis config
 	redisURI = os.Getenv("REDIS_SERVER")
@@ -122,7 +122,7 @@ func initializeAppConfig() {
 	//kafka config
 	data.KafkaHost = os.Getenv("KAFKA_SERVER")
 
-	logger.Printf("redis, kafka : %s %s", redisURI)
+	logger.Printf("redis, kafka : %s %s", redisURI, data.KafkaHost)
 }
 
 func initializeHTTPRouter() *mux.Router {
