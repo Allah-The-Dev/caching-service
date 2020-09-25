@@ -9,7 +9,7 @@ RUN go mod download
 FROM build_base AS builder
 WORKDIR /src
 COPY . .
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -tags netgo -o /bin/app -ldflags "-w -s -X" ./cmd/**/main.go
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -tags netgo -o /bin/app -ldflags "-w -s -X" .
 
 # final stage
 FROM debian:10.3-slim
