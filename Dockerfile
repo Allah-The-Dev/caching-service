@@ -3,7 +3,7 @@ RUN apk add alpine-sdk
 WORKDIR /go/src/app
 COPY . .
 RUN go get -v ./...
-RUN CGO_ENABLED=1 GOOS=linux GOARCH=arm64 go build -o app .
+RUN CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -o app .
 
 FROM alpine:latest
 WORKDIR /go/src/app
