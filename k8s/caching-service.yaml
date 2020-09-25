@@ -20,12 +20,12 @@ spec:
         ports:
         - containerPort: 8080
         env:
-        - name: MONOGODB_ADMINUSERNAME
+        - name: MONGODB_ADMINUSERNAME
           valueFrom:
             secretKeyRef:
               name: mongodb-secret
               key: mongo-root-username
-        - name: MONOGODB_ADMINPASSWORD
+        - name: MONGODB_ADMINPASSWORD
           valueFrom:
             secretKeyRef:
               name: mongodb-secret
