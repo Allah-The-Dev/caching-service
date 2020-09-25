@@ -17,7 +17,7 @@ spec:
         id: "0"
     spec:
       containers:
-      -name: kafka
+      - name: kafka
       image: bitnami/kafka
       ports:
       - containerPort: 9092
