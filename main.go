@@ -25,12 +25,14 @@ const (
 	writeTimeout      = 10 * time.Second
 	idleTimeout       = 90 * time.Second
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
-	mongoDBURIStr     = "mongodb://%s/?authSource=admin&readPreference=primary&ssl=false"
+	mongoDBURIStr     = "mongodb://%s:%s@%s:%s/?authSource=admin&readPreference=primary&ssl=false"
+	redisURI          = "%s:%s"
 )
 
 var (
 	mongoDBURI, redisURI string
 	cacheServiceDB       = "cacheService"
+	logger               *log.Logger
 )
 
 func main() {
@@ -105,14 +107,23 @@ func main() {
 }
 
 func initializeAppConfig() {
-	mongoDBURI = fmt.Sprintf(mongoDBURIStr, os.Getenv("MONGO_URI"))
-	redisURI = os.Getenv("REDIS_URI")
+	//mongo db config
+	dbServer, dbPort := os.Getenv("MONGODB_SERVER"), os.Getenv("MONGODB_PORT")
+	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
+	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbPort, dbUsername, dbPassword)
+	logger.Printf("mongodb server and port  is : %s, %s", dbServer, dbPort)
+
+	//redis config
+	redisServer, redisPort := os.Getenv("REDIS_SERVER"), os.Getenv("REDIS_PORT")
+	redisURI = fmt.Sprintf(redisURI, redisServer, redisPort)
+
+	//kafka config
 	data.KafkaHost = os.Getenv("KAFKA_HOST")
 }
 
 func initializeHTTPRouter() *mux.Router {
 	//custom logger
-	logger := log.New(os.Stdout, "employee-api", log.LstdFlags)
+	logger = log.New(os.Stdout, "employee-api", log.LstdFlags)
 	data.CLogger = logger
 
 	//employee handler
