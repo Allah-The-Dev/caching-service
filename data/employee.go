@@ -75,8 +75,8 @@ func GetEmployee(name string) (*Employee, error) {
 
 	emp := &Employee{}
 
-	if err := emp.GetEmployeeFromCache(name); err != nil {
-		return emp, err
+	if err := emp.GetEmployeeFromCache(name); err == nil {
+		return emp, nil
 	}
 
 	query := bson.M{"name": name}

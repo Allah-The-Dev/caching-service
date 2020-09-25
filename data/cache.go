@@ -27,6 +27,7 @@ func (emp *Employee) GetEmployeeFromCache(name string) error {
 	//check if this name exist in cache
 	exists, err := redis.Int(conn.Do("EXISTS", name))
 	if err != nil {
+		CLogger.Println(err)
 		return err
 	} else if exists == 0 {
 		return errors.New("Data for this emp do not exist")
@@ -35,10 +36,12 @@ func (emp *Employee) GetEmployeeFromCache(name string) error {
 
 	v, err := redis.Values(conn.Do("HGETALL", name))
 	if err != nil {
+		CLogger.Println(err)
 		return err
 	}
 
 	if err := redis.ScanStruct(v, emp); err != nil {
+		CLogger.Println(err)
 		return err
 	}
 	CLogger.Printf("cache hit successful for %s. Value is %v\n", name, *emp)

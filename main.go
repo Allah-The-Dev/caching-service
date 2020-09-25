@@ -37,7 +37,7 @@ var (
 func main() {
 
 	//custom logger
-	logger = log.New(os.Stdout, "employee-api", log.LstdFlags)
+	logger = log.New(os.Stdout, "employee-api : ", log.LstdFlags)
 	data.CLogger = logger
 
 	//initialize app config
