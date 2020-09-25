@@ -34,6 +34,8 @@ spec:
               key: zookeeper_url
         - name: KAFKA_BROKER_ID
           value: "0"
+        - name: ALLOW_PLAINTEXT_LISTENER
+          value: "yes"
         - name: KAFKA_CREATE_TOPICS
           value: employee:1:1
 ---
