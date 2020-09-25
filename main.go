@@ -110,7 +110,7 @@ func initializeAppConfig() {
 	dbServer := os.Getenv("MONGODB_SERVER")
 	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
 	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbServer, dbUsername, dbPassword)
-	logger.Printf("mongodb server and port  is : %s, %s", dbServer, dbPort)
+	logger.Printf("mongodb server and port  is : %s", dbServer)
 
 	//redis config
 	redisURI = os.Getenv("REDIS_SERVER")
