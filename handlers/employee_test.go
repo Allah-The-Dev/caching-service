@@ -55,7 +55,7 @@ func sendPostRequest(client *http.Client, addr string, body map[string]string) {
 
 func BenchMarkGetEmployees(b *testing.B) {
 
-	client := http.Client{}
+	client := &http.Client{}
 	b.ResestTimer()
 
 	for i := 0; i < b.N; i++ {
@@ -65,7 +65,7 @@ func BenchMarkGetEmployees(b *testing.B) {
 
 func BenchMarkGetEmployee(b *testing.B) {
 
-	client := http.Client{}
+	client := &http.Client{}
 	b.ResestTimer()
 
 	for i := 0; i < b.N; i++ {
@@ -75,7 +75,7 @@ func BenchMarkGetEmployee(b *testing.B) {
 
 func BenchMarkPostEmployee(b *testing.B) {
 
-	client := http.Client{}
+	client := &http.Client{}
 	b.ResestTimer()
 
 	for i := 0; i < b.N; i++ {
