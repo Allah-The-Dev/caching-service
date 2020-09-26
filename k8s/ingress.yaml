@@ -7,7 +7,9 @@ spec:
   - host: caching-service.com
     http:
       paths:
-      - backend:
+      - pathType: Prefix
+        path: "/"
+        backend:
           service:
             name: caching-service
             port: 
