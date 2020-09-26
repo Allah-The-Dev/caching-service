@@ -19,8 +19,5 @@ kubectl apply -f redis.yaml
 #create caching-service deployment and service
 kubectl apply -f caching-service.yaml
 
-#enable minikube ingress server
-minikube addons enable ingress
-
-#create ingress
-kubectl apply -f ingress.yaml
+#get external ip for service
+minikube service caching-service
