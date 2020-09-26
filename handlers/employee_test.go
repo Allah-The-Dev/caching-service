@@ -59,7 +59,7 @@ func BenchMarkGetEmployees(b *testing.B) {
 	b.ResestTimer()
 
 	for i := 0; i < b.N; i++ {
-		sendGetRequest(client, "http://127.0.0.1/8080/api/v1/employee")
+		sendGetRequest(client, "http://127.0.0.1:8080/api/v1/employee")
 	}
 }
 
@@ -69,7 +69,7 @@ func BenchMarkGetEmployee(b *testing.B) {
 	b.ResestTimer()
 
 	for i := 0; i < b.N; i++ {
-		sendGetRequest(client, "http://127.0.0.1/8080/api/v1/employee/raja")
+		sendGetRequest(client, "http://127.0.0.1:8080/api/v1/employee/raja")
 	}
 }
 
@@ -80,6 +80,6 @@ func BenchMarkPostEmployee(b *testing.B) {
 
 	for i := 0; i < b.N; i++ {
 		reqBody := map[string]string{"name": "foo", "unit": "bar"}
-		sendPostRequest(client, "http://127.0.0.1/8080/api/v1/employee", reqBody)
+		sendPostRequest(client, "http://127.0.0.1:8080/api/v1/employee", reqBody)
 	}
 }
