@@ -33,21 +33,21 @@ func sendPostRequest(client *http.Client, addr string, body map[string]string) {
 
 	jsonValue, _ := json.Marshal(body)
 
-	resp, err := http.Post(authAuthenticatorUrl, "application/json", bytes.NewBuffer(jsonValue))
+	resp, err := http.Post(addr, "application/json", bytes.NewBuffer(jsonValue))
 	if err != nil {
 		panic(err)
 	}
 
-	if res.StatusCode != 200 {
+	if resp.StatusCode != 200 {
 		panic("request failed")
 	}
 
-	_, err = ioutil.ReadAll(res.Body)
+	_, err = ioutil.ReadAll(resp.Body)
 	if err != nil {
 		panic(err)
 	}
 
-	err = res.Body.Close()
+	err = resp.Body.Close()
 	if err != nil {
 		panic(err)
 	}
@@ -56,7 +56,7 @@ func sendPostRequest(client *http.Client, addr string, body map[string]string) {
 func BenchMarkGetEmployees(b *testing.B) {
 
 	client := &http.Client{}
-	b.ResestTimer()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		sendGetRequest(client, "http://127.0.0.1:8080/api/v1/employee")
@@ -66,7 +66,7 @@ func BenchMarkGetEmployees(b *testing.B) {
 func BenchMarkGetEmployee(b *testing.B) {
 
 	client := &http.Client{}
-	b.ResestTimer()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		sendGetRequest(client, "http://127.0.0.1:8080/api/v1/employee/raja")
@@ -76,7 +76,7 @@ func BenchMarkGetEmployee(b *testing.B) {
 func BenchMarkPostEmployee(b *testing.B) {
 
 	client := &http.Client{}
-	b.ResestTimer()
+	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
 		reqBody := map[string]string{"name": "foo", "unit": "bar"}
