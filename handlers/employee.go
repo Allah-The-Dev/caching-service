@@ -134,7 +134,7 @@ func (emp *Employee) AddEmployee(w http.ResponseWriter, r *http.Request) {
 	empInfo := data.Employee{}
 	if err := empInfo.FromJSON(r.Body); err != nil {
 		emp.l.Println("[Error] unable to deserialize employee data")
-		http.Error(w, "Error reading employee info", http.StatusBadRequest)
+		http.Error(w, "request body is not in proper format", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
