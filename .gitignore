@@ -1,0 +1,5 @@
+#test output files
+*.out
+
+#.test files
+*.test
