@@ -95,7 +95,7 @@ func main() {
 	signal.Notify(c, os.Kill)
 
 	//global kafka consumer
-	data.KafkaConsumer()
+	go data.StartKafkaConsumer()
 
 	//block until signal is received
 	sig := <-c
