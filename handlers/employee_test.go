@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"caching-service/config"
 	"caching-service/data"
+	"encoding/json"
 	"log"
 	"net/http/httptest"
 	"os"
@@ -58,12 +59,16 @@ func BenchmarkGetEmployee(b *testing.B) {
 
 func BenchmarkPostEmployee(b *testing.B) {
 
-	r := httptest.NewRequest("POST", "/api/v1/employee", bytes.NewBuffer([]byte(`{"name": "foo", "unit": "bar"}`)))
+	reqBody := map[string]string{"name": "foo", "unit": "bar"}
+
+	reqBodyJSON, _ := json.Marshal(reqBody)
+
+	r := httptest.NewRequest("POST", "/api/v1/employee", bytes.NewBuffer(reqBodyJSON))
 
 	emp := &Employee{testLogger}
 
 	for i := 0; i < b.N; i++ {
 		w := httptest.NewRecorder()
-		emp.GetEmployee(w, r)
+		emp.AddEmployee(w, r)
 	}
 }
