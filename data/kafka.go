@@ -6,7 +6,11 @@ import (
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
-var KafkaHost string
+var (
+	//KafkaHost ...
+	KafkaHost     string
+	kafkaConsumer kafka.Consumer
+)
 
 //PublishToKafka ...
 func (emp *Employee) PublishToKafka() {
@@ -52,23 +56,23 @@ func (emp *Employee) PublishToKafka() {
 	p.Flush(15 * 1000)
 }
 
-//KafkaConsumer ...
-func KafkaConsumer() {
-	c, err := kafka.NewConsumer(&kafka.ConfigMap{
+//StartKafkaConsumer ...
+func StartKafkaConsumer() {
+	kafkaConsumer, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": KafkaHost,
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})
-	defer c.Close()
+	defer kafkaConsumer.Close()
 
 	if err != nil {
 		CLogger.Println(err)
 	}
 
-	c.SubscribeTopics([]string{"employee", "^aRegex.*[Ee]mployee.*"}, nil)
+	kafkaConsumer.SubscribeTopics([]string{"employee", "^aRegex.*[Ee]mployee.*"}, nil)
 
 	for {
-		msg, err := c.ReadMessage(-1)
+		msg, err := kafkaConsumer.ReadMessage(-1)
 		if err == nil && msg != nil {
 			CLogger.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 
