@@ -1,5 +1,5 @@
 # caching-service
-caching service in golang with microservices and REST
+caching service in golang with microservices and REST, which is integrated with Kafka, Redis and MongoDB
 
 # to run on docker swarm 
 1. cd docker
@@ -22,3 +22,10 @@ caching service in golang with microservices and REST
 
 # On application startup swagger docs can be accessed at
 1. http://<deployment ip>:port/api/v1/docs
+  
+# Employee CRUD APIs:
+1. GET: api/v1/employee?pageNo=2&pageSize=3
+2. GET: api/v1/employee
+3. GET: api/v1/employee/{employee_name}
+4. POST: api/v1/employee '{"name":"foo", "unit":"bar"}'
+
