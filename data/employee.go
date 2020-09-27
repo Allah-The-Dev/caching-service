@@ -51,11 +51,20 @@ func (emps *Employees) ToJSON(w io.Writer) error {
 }
 
 //GetEmployees ...
-func GetEmployees() (Employees, error) {
+func GetEmployees(pageNo, pageSize int) (Employees, error) {
 
 	empList := make([]*Employee, 0)
 
-	cur, err := getCollection().Find(context.TODO(), bson.D{{}})
+	//options
+	options := options.FindOptions{}
+	if pageNo != 0 && pageSize != 0 {
+		skips := int64(pageSize * (pageNo - 1))
+		int64PageSize := int64(pageSize)
+		options.SetSkip(skips)
+		options.SetLimit(int64PageSize)
+	}
+
+	cur, err := getCollection().Find(context.TODO(), bson.D{{}}, &options)
 	if err != nil {
 		CLogger.Println(err)
 		return empList, err

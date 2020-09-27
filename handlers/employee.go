@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"caching-service/data"
 
@@ -35,9 +37,46 @@ type GenericError struct {
 func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 	emp.l.Println("Handle Get all employees")
 
-	var empList data.Employees
+	var pageNo, pageSize int
 	var err error
-	if empList, err = data.GetEmployees(); err != nil {
+	var pageNoStr, pageSizeStr string
+	var pageNoPresent, pageSizePresent bool
+	//query params
+	query := r.URL.Query()
+	if pageNoStr = query.Get("pageNo"); pageNoStr != "" {
+		pageNoPresent = true
+		if pageNo, err = validatePageNoAndSize(pageNoStr); err != nil {
+			emp.l.Println("[Error] " + err.Error())
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+	if pageSizeStr = query.Get("pageSize"); pageSizeStr != "" {
+		pageSizePresent = true
+		if pageSize, err = validatePageNoAndSize(pageSizeStr); err != nil {
+			emp.l.Println("[Error] " + err.Error())
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+	}
+
+	if pageNoPresent && !pageSizePresent {
+		errStr := "[Error] if page no is provided, pageSize must be provided in request"
+		emp.l.Println(errStr)
+		http.Error(w, errStr, http.StatusBadRequest)
+		return
+	}
+
+	if !pageNoPresent && pageSizePresent {
+		errStr := "[Error] if page size is provided, pageNo must be provided in request"
+		emp.l.Println(errStr)
+		http.Error(w, errStr, http.StatusBadRequest)
+		return
+	}
+
+	//db call
+	var empList data.Employees
+	if empList, err = data.GetEmployees(pageNo, pageSize); err != nil {
 		emp.l.Println(err)
 		http.Error(w, "Unable to fetch employee list from DB", http.StatusInternalServerError)
 		return
@@ -58,7 +97,7 @@ func (emp *Employee) GetEmployees(w http.ResponseWriter, r *http.Request) {
 //	400: badRequestResponse
 // 	500: internalServerErrorResponse
 
-//GetEmployees ... http request handler to return all employees
+//GetEmployee ... http request handler to return all employees
 func (emp *Employee) GetEmployee(w http.ResponseWriter, r *http.Request) {
 	emp.l.Println("Handle Get employee")
 
@@ -109,4 +148,16 @@ func (emp *Employee) AddEmployee(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	msg := fmt.Sprintf("Employee added successfully with id %v", newEmpID)
 	w.Write([]byte(msg))
+}
+
+func validatePageNoAndSize(queryParamValue string) (int, error) {
+	var intQPValue int
+	var err error
+	if intQPValue, err = strconv.Atoi(queryParamValue); err != nil {
+		return intQPValue, errors.New("pageNo and pageSize must be number")
+	}
+	if intQPValue <= 0 {
+		return intQPValue, errors.New("pageNo and pageSize must be greater than zero")
+	}
+	return intQPValue, nil
 }
