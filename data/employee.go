@@ -87,7 +87,6 @@ func GetEmployee(name string) (*Employee, error) {
 	emp := &Employee{}
 
 	if err := emp.GetEmployeeFromCache(name); err == nil {
-		CLogger.Println(err)
 		return emp, nil
 	}
 
