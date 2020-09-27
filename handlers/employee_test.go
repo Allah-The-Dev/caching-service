@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"net/http/httptest"
+	"os"
 	"testing"
 )
 
@@ -63,13 +66,14 @@ func BenchMarkGetEmployees(b *testing.B) {
 	}
 }
 
-func BenchMarkGetEmployee(b *testing.B) {
+func BenchMarkGetEmploye(b *testing.B) {
 
-	client := &http.Client{}
-	b.ResetTimer()
-
+	r := httptest.NewRequest("GET", "api/v1/employee", nil)
+	logger = log.New(os.Stdout, "employee-api : ", log.LstdFlags)
+	emp := &Employee{logger}
 	for i := 0; i < b.N; i++ {
-		sendGetRequest(client, "http://127.0.0.1:8080/api/v1/employee/raja")
+		w := httptest.NewRecorder()
+		emp.GetEmployee(w, r)
 	}
 }
 
