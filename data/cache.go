@@ -12,8 +12,8 @@ import (
 var RedisClientPool *redis.Pool
 
 //InitializeRedisClientPool ...
-func InitializeRedisClientPool() *redis.Pool {
-	return &redis.Pool{
+func InitializeRedisClientPool() {
+	RedisClientPool = &redis.Pool{
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {

@@ -46,7 +46,7 @@ func main() {
 	}()
 
 	//redis client pool initialization
-	data.RedisClientPool = data.InitializeRedisClientPool()
+	data.InitializeRedisClientPool()
 	defer func() {
 		if err := data.RedisClientPool.Close(); err != nil {
 			panic(err)
