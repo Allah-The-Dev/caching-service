@@ -3,12 +3,24 @@ package data
 import (
 	"caching-service/config"
 	"errors"
+	"time"
 
 	"github.com/gomodule/redigo/redis"
 )
 
 //RedisClientPool ...
 var RedisClientPool *redis.Pool
+
+//InitializeRedisClientPool ...
+func InitializeRedisClientPool() *redis.Pool {
+	return &redis.Pool{
+		MaxIdle:     10,
+		IdleTimeout: 240 * time.Second,
+		Dial: func() (redis.Conn, error) {
+			return redis.Dial("tcp", config.RedisURI)
+		},
+	}
+}
 
 //UpdateEmployeeCache ...
 func (emp *Employee) UpdateEmployeeCache() {

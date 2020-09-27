@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/runtime/middleware"
@@ -36,26 +35,23 @@ func main() {
 	//initialize app config
 	config.InitializeAppConfig()
 
-	//global mongo client
-	mongoClient, err := data.InitializeMongoClient()
-	if err != nil {
+	//mongo client initialization
+	if err := data.InitializeMongoClient(); err != nil {
 		panic(err)
 	}
 	defer func() {
-		if err = mongoClient.Disconnect(context.Background()); err != nil {
+		if err := data.MongoClient.Disconnect(context.Background()); err != nil {
 			panic(err)
 		}
 	}()
-	data.MongoClient = mongoClient
 
-	//global redis client pool
-	data.RedisClientPool = &redis.Pool{
-		MaxIdle:     10,
-		IdleTimeout: 240 * time.Second,
-		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", config.RedisURI)
-		},
-	}
+	//redis client pool initialization
+	data.RedisClientPool = data.InitializeRedisClientPool()
+	defer func() {
+		if err := data.RedisClientPool.Close(); err != nil {
+			panic(err)
+		}
+	}()
 
 	//http REST routes
 	router := initializeHTTPRouter()

@@ -18,19 +18,20 @@ var (
 )
 
 //InitializeMongoClient ...
-func InitializeMongoClient() (*mongo.Client, error) {
+func InitializeMongoClient() error {
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(config.MongoDBURI))
+	var err error
+	MongoClient, err = mongo.NewClient(options.Client().ApplyURI(config.MongoDBURI))
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	if err = client.Connect(ctx); err != nil {
-		return nil, err
+	if err = MongoClient.Connect(ctx); err != nil {
+		return err
 	}
-	return client, nil
+	return nil
 }
 
 func getCollection() *mongo.Collection {
