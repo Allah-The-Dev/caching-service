@@ -1,18 +1,15 @@
 package data
 
 import (
+	"caching-service/config"
 	"context"
 	"encoding/json"
 	"io"
-	"log"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-//CLogger ...
-var CLogger *log.Logger
 
 //Employee ...
 // swagger:model
@@ -58,22 +55,24 @@ func GetEmployees(pageNo, pageSize int) (Employees, error) {
 	//options
 	options := options.FindOptions{}
 	if pageNo != 0 && pageSize != 0 {
+
 		skips := int64(pageSize * (pageNo - 1))
 		int64PageSize := int64(pageSize)
+
 		options.SetSkip(skips)
 		options.SetLimit(int64PageSize)
 	}
 
 	cur, err := getCollection().Find(context.TODO(), bson.D{{}}, &options)
 	if err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 		return empList, err
 	}
 
 	for cur.Next(context.TODO()) {
 		var emp Employee
 		if err := cur.Decode(&emp); err != nil {
-			CLogger.Println(err)
+			config.EmpAPILogger.Println(err)
 			return empList, err
 		}
 		empList = append(empList, &emp)
@@ -93,7 +92,7 @@ func GetEmployee(name string) (*Employee, error) {
 	query := bson.M{"name": name}
 	opts := options.FindOne()
 	if err := getCollection().FindOne(context.TODO(), query, opts).Decode(emp); err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 		return emp, err
 	}
 	return emp, nil
@@ -104,7 +103,7 @@ func AddEmployee(emp *Employee) (interface{}, error) {
 	var insertOneRes *mongo.InsertOneResult
 	var err error
 	if insertOneRes, err = getCollection().InsertOne(context.TODO(), emp); err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 		return 0, err
 	}
 	defer emp.PublishToKafka()

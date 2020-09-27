@@ -1,28 +1,27 @@
 package data
 
 import (
+	"caching-service/config"
 	"encoding/json"
 
 	"gopkg.in/confluentinc/confluent-kafka-go.v1/kafka"
 )
 
 var (
-	//KafkaHost ...
-	KafkaHost     string
 	kafkaConsumer kafka.Consumer
 )
 
 //PublishToKafka ...
 func (emp *Employee) PublishToKafka() {
 
-	CLogger.Println("publishing emp data to kafka topic")
+	config.EmpAPILogger.Println("publishing emp data to kafka topic")
 
 	p, err := kafka.NewProducer(
 		&kafka.ConfigMap{
-			"bootstrap.servers": KafkaHost,
+			"bootstrap.servers": config.KafkaHost,
 		})
 	if err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 	}
 
 	defer p.Close()
@@ -33,9 +32,9 @@ func (emp *Employee) PublishToKafka() {
 			switch ev := e.(type) {
 			case *kafka.Message:
 				if ev.TopicPartition.Error != nil {
-					CLogger.Printf("Delivery failed: %v\n", ev.TopicPartition)
+					config.EmpAPILogger.Printf("Delivery failed: %v\n", ev.TopicPartition)
 				} else {
-					CLogger.Printf("Delivered message to %v\n", ev.TopicPartition)
+					config.EmpAPILogger.Printf("Delivered message to %v\n", ev.TopicPartition)
 				}
 			}
 		}
@@ -45,7 +44,7 @@ func (emp *Employee) PublishToKafka() {
 	topic := "employee"
 	empBytesArr, err := json.Marshal(emp)
 	if err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 	}
 	p.Produce(&kafka.Message{
 		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
@@ -59,14 +58,14 @@ func (emp *Employee) PublishToKafka() {
 //StartKafkaConsumer ...
 func StartKafkaConsumer() {
 	kafkaConsumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": KafkaHost,
+		"bootstrap.servers": config.KafkaHost,
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})
 	defer kafkaConsumer.Close()
 
 	if err != nil {
-		CLogger.Println(err)
+		config.EmpAPILogger.Println(err)
 	}
 
 	kafkaConsumer.SubscribeTopics([]string{"employee", "^aRegex.*[Ee]mployee.*"}, nil)
@@ -74,17 +73,17 @@ func StartKafkaConsumer() {
 	for {
 		msg, err := kafkaConsumer.ReadMessage(-1)
 		if err == nil && msg != nil {
-			CLogger.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+			config.EmpAPILogger.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
 
 			emp := &Employee{}
 			if err = json.Unmarshal(msg.Value, emp); err != nil {
-				CLogger.Println(err)
+				config.EmpAPILogger.Println(err)
 			} else {
 				emp.UpdateEmployeeCache()
 			}
 		} else {
 			// The client will automatically try to recover from all errors.
-			CLogger.Printf("Consumer error: %v (%v)\n", err, msg)
+			config.EmpAPILogger.Printf("Consumer error: %v (%v)\n", err, msg)
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"caching-service/config"
 	"context"
 	"time"
 
@@ -17,9 +18,9 @@ var (
 )
 
 //InitializeMongoClient ...
-func InitializeMongoClient(mongoDBURI string) (*mongo.Client, error) {
+func InitializeMongoClient() (*mongo.Client, error) {
 
-	client, err := mongo.NewClient(options.Client().ApplyURI(mongoDBURI))
+	client, err := mongo.NewClient(options.Client().ApplyURI(config.MongoDBURI))
 	if err != nil {
 		return nil, err
 	}

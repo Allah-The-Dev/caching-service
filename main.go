@@ -1,9 +1,9 @@
 package main
 
 import (
+	"caching-service/config"
 	"caching-service/handlers"
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,32 +20,24 @@ import (
 
 // Tweak configuration values here.
 const (
-	httpServerPort    = ":8080"
+	httpServerPort    = ":8090"
 	readHeaderTimeout = 1 * time.Second
 	writeTimeout      = 10 * time.Second
 	idleTimeout       = 90 * time.Second
 	maxHeaderBytes    = http.DefaultMaxHeaderBytes
-	mongoDBURIStr     = "mongodb://%s:%s@%s/?authSource=admin&readPreference=primary&ssl=false"
 )
 
 var (
-	mongoDBURI, redisURI string
-	cacheServiceDB       = "cacheService"
-	logger               *log.Logger
+	cacheServiceDB = "cacheService"
 )
 
 func main() {
 
-	//custom logger
-	logger = log.New(os.Stdout, "employee-api : ", log.LstdFlags)
-	data.CLogger = logger
-
 	//initialize app config
-	initializeAppConfig()
+	config.InitializeAppConfig()
 
 	//global mongo client
-	logger.Printf("mongo db uri is : %s", mongoDBURI)
-	mongoClient, err := data.InitializeMongoClient(mongoDBURI)
+	mongoClient, err := data.InitializeMongoClient()
 	if err != nil {
 		panic(err)
 	}
@@ -61,7 +53,7 @@ func main() {
 		MaxIdle:     10,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
-			return redis.Dial("tcp", redisURI)
+			return redis.Dial("tcp", config.RedisURI)
 		},
 	}
 
@@ -110,26 +102,10 @@ func main() {
 	os.Exit(0)
 }
 
-func initializeAppConfig() {
-	//mongo db config
-	dbServer := os.Getenv("MONGODB_SERVER")
-	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
-	mongoDBURI = fmt.Sprintf(mongoDBURIStr, dbUsername, dbPassword, dbServer)
-	logger.Printf("mongodb server URI is : %s", dbServer)
-
-	//redis config
-	redisURI = fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVER"), os.Getenv("REDIS_PORT"))
-
-	//kafka config
-	data.KafkaHost = os.Getenv("KAFKA_SERVER")
-
-	logger.Printf("redis, kafka : %s %s", redisURI, data.KafkaHost)
-}
-
 func initializeHTTPRouter() *mux.Router {
 
 	//employee handler
-	empHandler := handlers.NewEmployee(logger)
+	empHandler := handlers.NewEmployee(config.EmpAPILogger)
 
 	//gorilla mux router
 	router := mux.NewRouter()
