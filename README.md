@@ -1,5 +1,5 @@
 # caching-service
-caching service in golang with microservices and REST
+caching service in golang with microservices and REST, which is integrated with Kafka, Redis and MongoDB
 
 # to run on docker swarm 
 1. cd docker
