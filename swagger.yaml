@@ -1,12 +1,6 @@
 definitions:
   Employee:
     properties:
-      id:
-        description: the id of employee
-        format: int64
-        minimum: 1
-        type: integer
-        x-go-name: ID
       name:
         description: the name of employee
         maxLength: 255

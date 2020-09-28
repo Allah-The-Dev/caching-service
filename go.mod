@@ -13,16 +13,16 @@ require (
 	github.com/gorilla/handlers v1.5.1 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/kr/pretty v0.2.1 // indirect
-	github.com/magiconair/properties v1.8.3 // indirect
+	github.com/magiconair/properties v1.8.4 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/pelletier/go-toml v1.8.1 // indirect
 	github.com/spf13/afero v1.4.0 // indirect
 	github.com/spf13/viper v1.7.1 // indirect
 	go.mongodb.org/mongo-driver v1.4.1
-	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
-	golang.org/x/sys v0.0.0-20200922070232-aee5d888a860 // indirect
-	golang.org/x/tools v0.0.0-20200921210052-fa0125251cc4 // indirect
+	golang.org/x/net v0.0.0-20200927032502-5d4f70055728 // indirect
+	golang.org/x/sys v0.0.0-20200926100807-9d91bd62050c // indirect
+	golang.org/x/tools v0.0.0-20200925191224-5d1fdd8fa346 // indirect
 	gopkg.in/confluentinc/confluent-kafka-go.v1 v1.4.2
 	gopkg.in/ini.v1 v1.61.0 // indirect
 )
