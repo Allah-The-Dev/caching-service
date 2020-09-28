@@ -10,7 +10,6 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/adammck/venv"
 	"github.com/gorilla/mux"
 
 	"github.com/go-openapi/runtime/middleware"
@@ -34,7 +33,7 @@ var (
 func main() {
 
 	//initialize app config
-	config.InitializeAppConfig(venv.OS())
+	config.InitializeAppConfig()
 
 	//mongo client initialization
 	if err := data.InitializeMongoClient(); err != nil {

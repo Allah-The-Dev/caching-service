@@ -3,7 +3,6 @@ module caching-service
 go 1.14
 
 require (
-	github.com/adammck/venv v0.0.0-20200610172036-e77789703e7c
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/confluentinc/confluent-kafka-go v1.4.2
 	github.com/go-openapi/runtime v0.19.22
