@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/adammck/venv"
 )
 
 const (
@@ -22,21 +24,21 @@ var (
 )
 
 //InitializeAppConfig ...
-func InitializeAppConfig() {
+func InitializeAppConfig(env venv.Env) {
 	//logger
 	EmpAPILogger = log.New(os.Stdout, "employee-api : ", log.LstdFlags)
 
 	//mongo db config
-	dbServer := os.Getenv("MONGODB_SERVER")
-	dbUsername, dbPassword := os.Getenv("MONGODB_ADMINUSERNAME"), os.Getenv("MONGODB_ADMINPASSWORD")
+	dbServer := env.Getenv("MONGODB_SERVER")
+	dbUsername, dbPassword := env.Getenv("MONGODB_ADMINUSERNAME"), env.Getenv("MONGODB_ADMINPASSWORD")
 	MongoDBURI = fmt.Sprintf(mongoDBURIStr, dbUsername, dbPassword, dbServer)
 	EmpAPILogger.Printf("mongodb server URI is : %s", dbServer)
 
 	//redis config
-	RedisURI = fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVER"), os.Getenv("REDIS_PORT"))
+	RedisURI = fmt.Sprintf("%s:%s", env.Getenv("REDIS_SERVER"), env.Getenv("REDIS_PORT"))
 
 	//kafka config
-	KafkaHost = os.Getenv("KAFKA_SERVER")
+	KafkaHost = env.Getenv("KAFKA_SERVER")
 
 	EmpAPILogger.Printf("redis, kafka : %s %s", RedisURI, KafkaHost)
 }
