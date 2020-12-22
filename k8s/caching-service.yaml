@@ -25,15 +25,9 @@ spec:
         - containerPort: 8080
         env:
         - name: MONGODB_ADMINUSERNAME
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: mongo-root-username
+          value: root
         - name: MONGODB_ADMINPASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mongodb-secret
-              key: mongo-root-password
+          value: example
         - name: MONGODB_SERVER
           valueFrom:
             configMapKeyRef:
@@ -60,7 +54,7 @@ metadata:
 spec:
   selector:
     app: caching-service
-  type: LoadBalancer
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 80

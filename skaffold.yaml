@@ -7,6 +7,7 @@ build:
   - image: allahthedev/caching-service
     docker:
       dockerfile: Dockerfile
+    context: caching-service-api
   tagPolicy:
     sha256: {}
 deploy:
