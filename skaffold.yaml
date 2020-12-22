@@ -1,0 +1,22 @@
+apiVersion: skaffold/v2beta10
+kind: Config
+metadata:
+  name: caching-service
+build:
+  artifacts:
+  - image: allahthedev/caching-service
+    docker:
+      dockerfile: Dockerfile
+  tagPolicy:
+    sha256: {}
+deploy:
+  kubectl:
+    manifests:
+    - k8s/caching-service.yaml
+    - k8s/configmap.yaml
+    - k8s/ingress.yaml
+    - k8s/kafka.yaml
+    - k8s/mongo-secrets.yaml
+    - k8s/mongo.yaml
+    - k8s/redis.yaml
+    - k8s/zookeeper.yaml

@@ -17,13 +17,23 @@ spec:
       containers:
       - name: caching-service
         image: allahthedev/caching-service
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         ports:
         - containerPort: 8080
         env:
         - name: MONGODB_ADMINUSERNAME
-          value: root
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
         - name: MONGODB_ADMINPASSWORD
-          value: example
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
         - name: MONGODB_SERVER
           valueFrom:
             configMapKeyRef:

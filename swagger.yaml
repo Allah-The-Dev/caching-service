@@ -25,7 +25,9 @@ definitions:
         x-go-name: Message
     type: object
     x-go-package: caching-service/handlers
-info: {}
+info:
+  version: 1.0.0
+  title: caching-service-api
 paths:
   /employee:
     post:
