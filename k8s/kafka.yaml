@@ -45,6 +45,8 @@ spec:
           value: "PLAINTEXT://$(MY_POD_IP):9092"
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
+        - name: KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE
+          value: "true"
 ---
 apiVersion: v1
 kind: Service

@@ -54,8 +54,9 @@ metadata:
 spec:
   selector:
     app: caching-service
-  type: ClusterIP
+  type: NodePort
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8080
+      nodePort: 30007
